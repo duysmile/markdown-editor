@@ -23,7 +23,8 @@ const Header = (props) => {
         <span id="img-caption">{props.header}</span>
       </h5>
       <button className="bg-secondary border-0 d-block text-white p-2" onClick={props.onScreenChange} id={props.header}>
-        <i className="fa fa-arrows-alt"></i>
+        {!props.fullScreen && <i className="fa fa-arrows-alt"></i>}
+        {props.fullScreen && <i className="fa fa-angle-double-down"></i>}
       </button>
     </div>
   );
@@ -47,7 +48,7 @@ class Editor extends React.Component {
     return (
       <div className="d-flex justify-content-center m-3 w-100">
         <div className="w-50">
-          <Header onScreenChange={this.props.onScreenChange} header="Editor" />
+          <Header onScreenChange={this.props.onScreenChange} header="Editor" fullScreen={this.props.fullScreen} />
           <textarea id="editor" type="text" rows="5" className="editor--overflow-auto w-100 px-3 py-2 bg-light" value={this.state.input} onChange={this.handleChange}>
             {this.state.input}
           </textarea>
@@ -61,7 +62,7 @@ const Preview = (props) => {
   return (
     <div id="tribute-info" className="d-flex justify-content-center m-3 w-100">
       <div className="w-75">
-        <Header onScreenChange={props.onScreenChange} header="Previewer" />
+        <Header onScreenChange={props.onScreenChange} header="Previewer" fullScreen={props.fullScreen} />
         <div id="preview" className="previewer--min-height border editor--overflow-auto w-100 px-3 py-2 bg-light" dangerouslySetInnerHTML={{ __html: props.markdown }}>
         </div>
       </div>
@@ -96,7 +97,6 @@ class App extends React.Component {
   }
 
   changeScreenModeEditor() {
-    console.log('here')
     this.setState((prev) => {
       return {
         fullScreenEditor: !prev.fullScreenEditor,
@@ -125,11 +125,11 @@ class App extends React.Component {
           Markdown Project
         </h4>
         <div className={this.state.fullScreenEditor ? 'w-100 box--fullscreen' : 'w-100'}>
-          <Editor handleChangeText={this.handleChangeText} text={this.state.text} onScreenChange={this.changeScreenModeEditor} />
+          <Editor handleChangeText={this.handleChangeText} text={this.state.text} onScreenChange={this.changeScreenModeEditor} fullScreen={this.state.fullScreenEditor} />
         </div>
 
         <div className={this.state.fullScreenPreview ? 'w-100 box--fullscreen' : 'w-100'}>
-          <Preview markdown={this.convertMarkdown(this.state.text)} onScreenChange={this.changeScreenModePreview} />
+          <Preview markdown={this.convertMarkdown(this.state.text)} onScreenChange={this.changeScreenModePreview} fullScreen={this.state.fullScreenPreview} />
         </div>
       </div>
     );
